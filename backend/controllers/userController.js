@@ -52,14 +52,23 @@ export const registerUser = asyncHandler(async (req, res) => {
 //@route    POST /api/users/logout
 //@access   Public
 export const logoutUser = asyncHandler(async (req, res) => {
-  res.status(200).json({ message: "logoutUser" });
+  res.cookie("jwt", "", {
+    httpOnly: true,
+    expires: new Date(0),
+  });
+  res.status(200).json({ message: "User Logged Out" });
 });
 
 //@desc     get user profile
 //@route    GET /api/users/profile
 //@access   private
 export const getUserProfile = asyncHandler(async (req, res) => {
-  res.status(200).json({ message: "getUserProfile" });
+  const user = {
+    id: req.user._id,
+    name: req.user.name,
+    email: req.user.email,
+  };
+  res.status(200).json(user);
 });
 
 //@desc     update user profile
