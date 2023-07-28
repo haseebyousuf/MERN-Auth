@@ -1,8 +1,36 @@
 import { useState } from "react";
-
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { useLoginMutation } from "../slices/usersApiSlice";
+import { setCredentials } from "../slices/authSlice";
+import { useEffect } from "react";
 const LoginScreen = () => {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [login, { isLoading }] = useLoginMutation();
+  const { userInfo } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate("/profile");
+    }
+  }, [navigate, userInfo]);
+  const handleLogin = async (e) => {
+    e.preventDefault;
+    try {
+      const res = await login({ email, password }).unwrap();
+      dispatch(setCredentials({ ...res }));
+      toast.success("User Logged In");
+      navigate("/profile");
+    } catch (err) {
+      toast.error(err?.data?.message || err?.error);
+    }
+  };
   return (
     <div className='py-5'>
       <section className='flex justify-center '>
@@ -25,9 +53,15 @@ const LoginScreen = () => {
               required
               onChange={(e) => setPassword(e.target.value)}
             />
-            <button className='bg-blue-600 px-4 py-3 rounded text-white hover:bg-blue-500'>
-              Sign In
+            <button
+              className='bg-blue-600 px-4 py-3 rounded text-white hover:bg-blue-500'
+              onClick={(e) => handleLogin(e)}
+            >
+              {isLoading ? "Working..." : "Sign In"}
             </button>
+            <Link className='text-blue-600' to='/register'>
+              New User? Sign Up
+            </Link>
           </div>
         </div>
       </section>
