@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+
 import Menu from "./Menu";
 
 const Header = () => {
@@ -6,9 +8,9 @@ const Header = () => {
   return (
     <nav className='bg-slate-200'>
       <div className='max-w-7xl mx-auto flex items-center justify-between h-16 px-4 '>
-        <div className='flex-shrink-0 font-bold tracking-wider text-xl'>
+        <Link to='/' className='flex-shrink-0 font-bold tracking-wider text-xl'>
           MERN AUTH
-        </div>
+        </Link>
         <div className='hidden md:block'>
           <Menu />
         </div>
